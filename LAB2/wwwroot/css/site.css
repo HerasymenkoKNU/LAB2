@@ -1,31 +1,146 @@
-html {
-  font-size: 14px;
+﻿body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+.app-header {
+    background-color: #3c8dbc;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    .app-header .controls button {
+        margin-left: 8px;
+    }
+
+.add-btn {
+    background: #fff;
+    color: #3c8dbc;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+    .add-btn:hover {
+        background: #ecf0f5;
+    }
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 20px;
 }
 
-body {
-  margin-bottom: 60px;
+
+.task-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    
+    transition: transform 180ms ease, box-shadow 180ms ease, opacity 160ms ease;
+    will-change: transform, opacity;
+    cursor: grab;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    .task-card:active {
+        cursor: grabbing;
+    }
+
+
+.cards-container .task-card + .task-card {
+    margin-top: 0; 
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+
+.task-ghost {
+    opacity: 0.55 !important;
+    transform: scale(0.98) !important;
+    filter: blur(0.2px);
 }
+
+
+.task-chosen {
+    transform: scale(1.03) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18) !important;
+    z-index: 9999 !important;
+}
+
+
+.task-drag {
+    opacity: 0.95;
+}
+
+
+.card-header, .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: #fff8c6;
+}
+
+.card-title {
+    font-weight: 500;
+}
+
+.complete-btn, .delete-btn, .edit-btn, .undo-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.complete-btn {
+    color: green;
+    font-size: 1.2rem;
+    margin-right: 4px;
+}
+
+.delete-btn {
+    color: #a00;
+    font-size: 1.2rem;
+}
+
+.edit-btn {
+    color: #3c8dbc;
+    border: 1px solid #3c8dbc;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.undo-btn {
+    color: #3c8dbc;
+    border: 1px solid #3c8dbc;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-right: 4px;
+}
+
+    .complete-btn:hover,
+    .delete-btn:hover,
+    .edit-btn:hover,
+    .undo-btn:hover {
+        opacity: 0.7;
+    }
+
+.card-body {
+    padding: 8px;
+    color: #333;
+}
+
+.filter-container {
+    padding: 12px 24px;
+    background: #f0f8ff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+

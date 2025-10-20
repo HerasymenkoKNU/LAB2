@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Create Task</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+    <header class="app-header">
+        <h1>Create Task</h1>
+        <button onclick="window.location.href='index.html'" class="add-btn">Back</button>
+    </header>
+    <main>
+        <form id="createForm">
+            <input type="text" id="create-name" placeholder="Name" required />
+            <input type="text" id="create-description" placeholder="Description" />
+            <input type="number" id="create-priority" placeholder="Priority (1–10)" min="1" max="10" required />
+            <input type="datetime-local" id="create-dueDate" required />
+            <button type="submit" class="add-btn">Save</button>
+        </form>
+    </main>
+    <script>
+        const api = '/api/Tasks';
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('createForm').addEventListener('submit', async e => {
+                e.preventDefault();
+                const task = {
+                    name: document.getElementById('create-name').value.trim(),
+                    description: document.getElementById('create-description').value.trim(),
+                    priority: +document.getElementById('create-priority').value,
+                    dueDate: document.getElementById('create-dueDate').value,
+                    status: 'Not done'
+                };
+                const res = await fetch(api, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(task)
+                });
+                if (res.ok) {
+                    window.location.href = 'index.html';
+                } else {
+                    const err = await res.json();
+                    alert(Object.values(err.errors || err).flat().join('\n'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Completed Tasks</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+    <header class="app-header">
+        <h1>Completed Tasks</h1>
+        <div class="controls">
+            <button onclick="window.location.href='index.html'" class="add-btn">Back</button>
+        </div>
+    </header>
+    <main>
+        <section class="cards-container" id="tasks"></section>
+    </main>
+    <script>
+        const api = '/api/Tasks';
+        document.addEventListener('DOMContentLoaded', async () => {
+            const res = await fetch(api);
+            const tasks = await res.json();
+            const done = tasks.filter(t => t.status === 'Done');
+            const container = document.getElementById('tasks');
+            container.innerHTML = '';
+            done.forEach(t => {
+                const card = document.createElement('div');
+                card.className = 'task-card completed';
+                card.innerHTML = `
+              <div class="card-header">
+                <span class="card-title">${t.name}</span>
+                <div>
+                  <button class="undo-btn" onclick="undo(${t.id})">↺</button>
+                  <button class="delete-btn" onclick="del(${t.id})">×</button>
+                </div>
+              </div>
+              <div class="card-body"><p>${t.description}</p></div>
+              <div class="card-footer">
+                <small>Priority: ${t.priority}</small>
+                <small>Due: ${new Date(t.dueDate).toLocaleDateString()}</small>
+              </div>
+            `;
+                container.appendChild(card);
+            });
+        });
+
+        async function undo(id) {
+            const r = await fetch(`${api}/${id}`);
+            const t = await r.json();
+            t.status = 'Not done';
+            await fetch(`${api}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(t)
+            });
+            location.reload();
+        }
+
+        async function del(id) {
+            await fetch(`${api}/${id}`, { method: 'DELETE' });
+            location.reload();
+        }
+    </script>
+</body>
+</html>

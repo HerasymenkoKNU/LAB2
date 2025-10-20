@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Edit Task</title>
+    <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+    <header class="app-header">
+        <h1>Edit Task</h1>
+        <button onclick="window.location.href='index.html'" class="add-btn">Back</button>
+    </header>
+    <main>
+        <form id="editForm">
+            <input type="hidden" id="edit-id" />
+            <input type="text" id="edit-name" placeholder="Name" required />
+            <input type="text" id="edit-description" placeholder="Description" />
+            <input type="number" id="edit-priority" placeholder="Priority (1–10)" min="1" max="10" required />
+            <input type="datetime-local" id="edit-dueDate" required />
+            <button type="submit" class="add-btn">Save</button>
+        </form>
+    </main>
+    <script>
+        const api = '/api/Tasks';
+        function getId() {
+            return new URLSearchParams(location.search).get('id');
+        }
+        document.addEventListener('DOMContentLoaded', async () => {
+            const id = getId();
+            if (!id) return history.back();
+            const res = await fetch(`${api}/${id}`);
+            if (!res.ok) return alert('Not found') && history.back();
+            const t = await res.json();
+            document.getElementById('edit-id').value = t.id;
+            document.getElementById('edit-name').value = t.name;
+            document.getElementById('edit-description').value = t.description;
+            document.getElementById('edit-priority').value = t.priority;
+            document.getElementById('edit-dueDate').value = t.dueDate.substring(0, 16);
+
+            document.getElementById('editForm').addEventListener('submit', async e => {
+                e.preventDefault();
+                const task = {
+                    id: t.id,
+                    name: document.getElementById('edit-name').value.trim(),
+                    description: document.getElementById('edit-description').value.trim(),
+                    priority: +document.getElementById('edit-priority').value,
+                    dueDate: document.getElementById('edit-dueDate').value,
+                    status: t.status
+                };
+                const upd = await fetch(`${api}/${t.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(task)
+                });
+                if (upd.ok) window.location.href = 'index.html';
+                else {
+                    const err = await upd.json();
+                    alert(Object.values(err.errors || err).flat().join('\n'));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
